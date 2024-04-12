@@ -7,7 +7,7 @@ SELECT SO.ObjType
 	,used_mb = Sum(SO.used_mb)
 FROM (
 	SELECT Obj.object_id
-		,ObjName = Sc.name + '.' + Obj.name
+		,ObjName = SCHEMA_NAME(Obj.schema_id) + '.' + Obj.name
 		,Parent = CASE  WHEN Obj.parent_object_id = 0 THEN 1 ELSE 0 END
 		,Child = CASE  WHEN Obj.parent_object_id = 0 THEN 0 ELSE 1 END
 		,ObjTypeId = Obj.[type]
@@ -18,23 +18,21 @@ FROM (
 		,Tsize.allocated_mb
 		,Tsize.used_mb
 	FROM sys.objects AS Obj
-	JOIN sys.schemas Sc ON Obj.schema_id = Sc.schema_id
 	/* Query to Table Sizes */
 	LEFT JOIN (
-		SELECT O.object_id
+		SELECT p.object_id
 			,allocated_mb = Cast((SUM(u.total_pages) * 8) / 1024.0 AS NUMERIC(36, 2))
 			,used_mb = Cast((SUM(u.used_pages) * 8) / 1024.0 AS NUMERIC(36, 2))
 		FROM sys.allocation_units AS u
 		JOIN sys.partitions AS p ON u.container_id = p.hobt_id
-		JOIN sys.objects AS O ON p.object_id = O.object_id
-		GROUP BY O.object_id
+		GROUP BY p.object_id
 		) AS Tsize ON Obj.object_id = Tsize.object_id
 	) AS SO
 GROUP BY SO.ObjType
 ORDER BY 1
 
 SELECT Obj.object_id
-	,ObjName = Sc.name + '.' + Obj.name
+	,ObjName = SCHEMA_NAME(Obj.schema_id) + '.' + Obj.name
 	,obj.parent_object_id
 	,P_Obj.parent_object
 	,ObjTypeId = Obj.[type]
@@ -49,9 +47,8 @@ FROM sys.objects AS Obj
 JOIN sys.schemas Sc ON Obj.schema_id = Sc.schema_id
 LEFT JOIN (
 	SELECT parent_object_id = Obj.object_id
-		,parent_object = Sc.name + '.' + Obj.name
+		,parent_object = SCHEMA_NAME(Obj.schema_id) + '.' + Obj.name
 	FROM sys.objects AS Obj
-	JOIN sys.schemas Sc ON Obj.schema_id = Sc.schema_id
 	) AS P_Obj ON Obj.parent_object_id = P_Obj.parent_object_id
 LEFT JOIN (
 	SELECT O.object_id
