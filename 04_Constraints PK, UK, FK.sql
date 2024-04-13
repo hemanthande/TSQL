@@ -1,6 +1,5 @@
 --SQL Server Data Dictionary Query Toolbox
 --List all table constraints (PK, UK, FK, Check & Default) in SQL Server database
-
 use AdventureWorks2022
 SELECT table_view
 	,object_type
