@@ -1,3 +1,5 @@
+USE WideWorldImportersDW
+
 /*Summary of All Objects except Triggers in this database*/
 SELECT SO.ObjType
 	,Ct = Count(1)
@@ -61,5 +63,7 @@ LEFT JOIN (
 	GROUP BY O.object_id
 	) AS Tsize ON Obj.object_id = Tsize.object_id
 WHERE 1 = 1
---AND Obj.object_id = 363148339 --xml_index_nodes_2101582525_256001
-ORDER BY ObjType,ObjName,object_id
+AND obj.is_ms_shipped <> 1 --Filtering out Sys objects
+ORDER BY ObjType
+	,ObjName
+	,object_id
