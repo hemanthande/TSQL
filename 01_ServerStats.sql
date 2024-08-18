@@ -8,6 +8,8 @@ GO
 
 SELECT DBNAME = DB_NAME(database_id)
 	,SizeMb = Cast(SUM(size * 8 / 1024.00) AS NUMERIC(32, 2))
+	,backupSQK = 'BACKUP DATABASE ' + DB_NAME(database_id) +' TO DISK = ''C:\SQLServer_Backups\'+DB_NAME(database_id) + '.bak''  WITH NOFORMAT,
+      NAME = ''' + @@SERVERNAME +' as of '+ CONVERT(NVARCHAR, GETDATE(), 101)+ '''; ' 
 FROM master.sys.master_files
 GROUP BY DB_NAME(database_id)
 --Order by Size desc, DBNAME
