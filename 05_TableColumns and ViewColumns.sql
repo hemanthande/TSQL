@@ -16,7 +16,7 @@ FROM (
 		,C.max_length
 		,C.precision
 		,C.scale
-		,'-- Select ' + C.name + ', Ct = Count(1) from ' + Sc.name + '.' + T.name + ' GROUP BY ' + C.name + 'ORDER BY Ct Desc' AS SqlGrpByCol
+		,'-- Select ' + C.name + ', Ct = Count(1) from ' + Sc.name + '.' + T.name + ' GROUP BY ' + C.name + ' ORDER BY Ct Desc' AS SqlGrpByCol
 	FROM sys.tables AS T
 	INNER JOIN sys.schemas AS Sc ON T.schema_id = Sc.schema_id
 	INNER JOIN sys.columns AS C ON T.object_id = C.object_id
@@ -45,7 +45,7 @@ FROM (
 		,C.max_length
 		,C.precision
 		,C.scale
-		,'-- Select ' + C.name + ', Ct = Count(1) from ' + Sc.name + '.' + T.name + ' GROUP BY ' + C.name + 'ORDER BY Ct Desc' AS SqlGrpByCol
+		,'-- Select ' + C.name + ', Ct = Count(1) from ' + Sc.name + '.' + T.name + ' GROUP BY ' + C.name + ' ORDER BY Ct Desc' AS SqlGrpByCol
 	FROM sys.VIEWS AS T
 	INNER JOIN sys.schemas AS Sc ON T.schema_id = Sc.schema_id
 	INNER JOIN sys.columns AS C ON T.object_id = C.object_id
