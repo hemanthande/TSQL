@@ -67,3 +67,24 @@ AND obj.is_ms_shipped <> 1 --Filtering out Sys objects
 ORDER BY ObjType
 	,ObjName
 	,object_id
+
+
+SELECT
+    DB_NAME(database_id) AS DatabaseName,
+	database_id,
+    SUM(size * 8.0 / (1024*1024)) AS DatabaseSizeGB
+FROM sys.master_files
+WHERE type_desc = 'ROWS'
+AND database_id = 33
+GROUP BY database_id 
+ORDER BY DatabaseName;
+
+SELECT
+    DB_NAME(database_id) AS DatabaseName,
+	database_id,
+    SUM(size * 8.0 / (1024*1024)) AS LogSizeGB
+FROM sys.master_files
+WHERE type_desc = 'LOG'
+AND database_id = 33
+GROUP BY database_id
+ORDER BY DatabaseName;
