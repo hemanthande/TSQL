@@ -8,6 +8,7 @@ SELECT TableName
 	,precision
 	,scale
 	,SqlGrpByCol
+	,SqlGrpByColLen
 FROM (
 	SELECT DB_NAME() + '.' + Sc.name + '.' + T.name AS TableName
 		,C.name AS ColumnName
@@ -16,7 +17,8 @@ FROM (
 		,C.max_length
 		,C.precision
 		,C.scale
-		,'-- Select ' + C.name + ', Ct = Count(1) from ' + Sc.name + '.' + T.name + ' GROUP BY ' + C.name + ' ORDER BY Ct Desc' AS SqlGrpByCol
+		,'-- Select [' + C.name + '], Ct = Count(1) from ' + Sc.name + '.' + T.name + ' GROUP BY [' + C.name + '] ORDER BY Ct Desc' AS SqlGrpByCol
+		,'-- Select LEN([' + C.name + ']), Ct = Count(1) from ' + Sc.name + '.' + T.name + ' GROUP BY LEN([' + C.name + ']) ORDER BY Ct Desc' AS SqlGrpByColLen
 	FROM sys.tables AS T
 	INNER JOIN sys.schemas AS Sc ON T.schema_id = Sc.schema_id
 	INNER JOIN sys.columns AS C ON T.object_id = C.object_id
